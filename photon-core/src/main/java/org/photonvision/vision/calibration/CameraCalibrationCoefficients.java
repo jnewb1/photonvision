@@ -102,18 +102,35 @@ public class CameraCalibrationCoefficients implements Releasable {
                 };
 
         var dist_coefs = json.get("distortion_coefficients");
+        
+        double[] dist_array;
+        JsonMat distortion_jsonmat;
 
-        double[] dist_array =
-                new double[] {
-                    dist_coefs.get(0).doubleValue(),
-                    dist_coefs.get(1).doubleValue(),
-                    dist_coefs.get(2).doubleValue(),
-                    dist_coefs.get(3).doubleValue(),
-                    dist_coefs.get(4).doubleValue(),
-                };
+        if(dist_coefs.size() == 4){
+            dist_array =
+            new double[] {
+                dist_coefs.get(0).doubleValue(),
+                dist_coefs.get(1).doubleValue(),
+                dist_coefs.get(2).doubleValue(),
+                dist_coefs.get(3).doubleValue()
+            };
+
+            distortion_jsonmat = new JsonMat(1, 4, dist_array);
+        }
+        else{
+            dist_array =
+            new double[] {
+                dist_coefs.get(0).doubleValue(),
+                dist_coefs.get(1).doubleValue(),
+                dist_coefs.get(2).doubleValue(),
+                dist_coefs.get(3).doubleValue(),
+                dist_coefs.get(4).doubleValue()
+            };
+
+            distortion_jsonmat = new JsonMat(1, 5, dist_array);
+        }
 
         var cam_jsonmat = new JsonMat(3, 3, cam_arr);
-        var distortion_jsonmat = new JsonMat(1, 5, dist_array);
 
         var error = json.get("avg_reprojection_error").asDouble();
         var width = json.get("img_size").get(0).doubleValue();
